@@ -293,7 +293,6 @@ def CalcTopMap(rB, qB, retrievalL, queryL, topk):
     topkmap = topkmap / num_query
     return topkmap
 
-
 if __name__=="__main__":
 
     import paddle.optimizer as optim
