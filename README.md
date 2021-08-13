@@ -16,9 +16,9 @@ Paddle 2.1.0
 * coco
 * mirflickr
 
-##How to Train
+## How to Train
 It is easy to train the deephash model, just run command as follows:
 ```
 python DSHSD.py
 ```
-the trained model will be save in *config["save_path"]* (by default: save/DSHSD)
+The trained model will be save in *config["save_path"]* (by default: save/DSHSD)
