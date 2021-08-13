@@ -1,10 +1,10 @@
 # DeepHash-Paddle
 DeepHash research based on paddle
 
-### Environment
+## Environment
 Paddle 2.1.0
 
-#### Dataset
+## Dataset
 * cifar10
 * cifar10-1
 * cifar10-2
@@ -16,7 +16,9 @@ Paddle 2.1.0
 * coco
 * mirflickr
 
-#### Train
+##How to Train
+It is easy to train the deephash model, just run command as follows:
 ```
 python DSHSD.py
 ```
+the trained model will be save in *config["save_path"]* (by default: save/DSHSD)
