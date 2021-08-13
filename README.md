@@ -17,6 +17,7 @@ Paddle 2.1.0
 * mirflickr
 
 #### Train
-'''
+```
+shell
 python DSHSD.py
-'''
+```
