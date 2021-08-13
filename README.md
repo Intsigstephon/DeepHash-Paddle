@@ -18,6 +18,5 @@ Paddle 2.1.0
 
 #### Train
 ```
-shell
 python DSHSD.py
 ```
