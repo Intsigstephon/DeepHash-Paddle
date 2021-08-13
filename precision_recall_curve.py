@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from utils.tools import draw_range
+from utils import draw_range
 # Precision Recall Curve data
 
 pr_data = {
