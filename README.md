@@ -5,10 +5,16 @@ DeepHash research based on paddle
 Paddle 2.1.0
 
 #### Dataset
-todo
+* cifar10
+* cifar10-1
+* cifar10-2
+* imagenet100
+* nuswide_21
+* nuswide_21_m
+* nuswide_81_m
+* voc2012
+* coco
+* mirflickr
 
 #### Train
-todo
-
-#### Eval
-todo
+python DSHSD.py
