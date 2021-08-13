@@ -232,14 +232,24 @@ def get_data(config):
     return dset_loaders["train_set"], dset_loaders["test"], dset_loaders["database"], \
            len(dsets["train_set"]), len(dsets["test"]), len(dsets["database"])
 
+@paddle.no_grad()
 def compute_result(dataloader, net, device):
-    bs, clses = [], []
+    all_feas, all_image_id = None, None
     net.eval()
 
-    for img, cls, _ in tqdm(dataloader):
-        clses.append(cls)
-        bs.append((net(img)))
-    return paddle.concatenate(bs).sign(), paddle.concatenate(clses)
+    #will not release
+    for img, label, index in tqdm(dataloader):
+        batch_feas = net(img)
+        batch_feas = paddle.sign(batch_feas).astype("float32")
+
+        if all_feas is None:
+            all_feas = batch_feas
+            all_image_id = label
+        else:
+            all_feas = paddle.concat([all_feas, batch_feas])
+            all_image_id = paddle.concat([all_image_id, label])   #why not
+
+    return all_feas, all_image_id
 
 draw_range = [1, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500,
               9000, 9500, 10000]
