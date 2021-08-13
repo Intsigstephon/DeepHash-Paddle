@@ -2,7 +2,7 @@
 DeepHash research based on paddle
 
 ## Environment
-Paddle 2.1.0
+Paddle 2.1.0 python3.7
 
 ## Dataset
 * cifar10
