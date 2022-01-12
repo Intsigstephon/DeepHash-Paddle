@@ -18,7 +18,7 @@ pyhon DSDH.py
 If you have any problems, feel free to contact me by email(1142732931@qq.com) or raise an issue.  
 
 # Precision Recall Curve
-<img src="https://github.com/Intsigstephon/DeepHash-Paddle/blob/master/utils/pr.png"  alt="Precision Recall Curve"/><br/>  
+<img src="https://github.com/Intsigstephon/DeepHash-Paddle/blob/main/utils/pr.png"  alt="Precision Recall Curve"/><br/>  
 I add some code in DSH.py:
 ```
 if "cifar10-1" == config["dataset"] and epoch > 29:
