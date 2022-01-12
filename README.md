@@ -13,9 +13,7 @@ pyhon DSH.py
 pyhon DPSH.py  
 pyhon DHN.py    
 pyhon DSDH.py    
-```
-
-If you have any problems, feel free to contact me by email(1142732931@qq.com) or raise an issue.  
+``` 
 
 # Precision Recall Curve
 <img src="https://github.com/Intsigstephon/DeepHash-Paddle/blob/main/utils/pr.png"  alt="Precision Recall Curve"/><br/>  
@@ -147,5 +145,6 @@ code [Deep-Unsupervised-Image-Hashing](https://github.com/liyunqianggyn/Deep-Uns
     </tr>
 </table>
 
-Due to time constraints, I can't test many hyper-parameters  
+Due to time constraints, I can't test many hyper-parameters.
+If you have any problems, feel free to contact me by email(451685052@qq.com) or raise an issue. 
 
