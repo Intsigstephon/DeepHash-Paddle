@@ -62,11 +62,7 @@ code [DPSH-pytorch](https://github.com/jiangqy/DPSH-pytorch)
 
 DHN(AAAI2016)  
 paper [Deep Hashing Network for Efficient Similarity Retrieval](http://ise.thss.tsinghua.edu.cn/~mlong/doc/deep-hashing-network-aaai16.pdf)  
-code [DeepHash-tensorflow](https://github.com/thulab/DeepHash)
-
-DTSH(ACCV2016)  
-paper [Deep Supervised Hashing with Triplet Labels](https://arxiv.org/abs/1612.03900)  
-code [DTSH](https://github.com/Minione/DTSH)  
+code [DeepHash-tensorflow](https://github.com/thulab/DeepHash) 
 
 HashNet(ICCV2017)  
 paper [HashNet: Deep Learning to Hash by Continuation](http://openaccess.thecvf.com/content_ICCV_2017/papers/Cao_HashNet_Deep_Learning_ICCV_2017_paper.pdf)  
@@ -80,43 +76,11 @@ DSDH(NIPS2017)
 paper [Deep Supervised Discrete Hashing](https://papers.nips.cc/paper/6842-deep-supervised-discrete-hashing.pdf)  
 code [DSDH_PyTorch](https://github.com/TreezzZ/DSDH_PyTorch)
 
-DFH(BMVC2019)  
-paper [Push for Quantization: Deep Fisher Hashing](https://arxiv.org/abs/1909.00206)  
-code [Push-for-Quantization-Deep-Fisher-Hashing](https://github.com/liyunqianggyn/Push-for-Quantization-Deep-Fisher-Hashing)
-
-
-ISDH(arxiv2018)  
-paper [Instance Similarity Deep Hashing for Multi-Label Image Retrieval](https://arxiv.org/abs/1803.02987v1)  
-code [ISDH-Tensorflow](https://github.com/pectinid16/ISDH-Tensorflow)
-
-IDHN(TMM2019)  
-paper [Improved Deep Hashing with Soft Pairwise Similarity for Multi-label Image Retrieval](https://arxiv.org/abs/1803.02987)  
-code [IDHN-Tensorflow](https://github.com/pectinid16/IDHN)
-
-DBDH(Neurocomputing2020)  
-paper [Deep balanced discrete hashing for image retrieval](https://www.sciencedirect.com/science/article/abs/pii/S0925231220306032)
-
-ADSH(AAAI2018)  
-paper [Asymmetric Deep Supervised Hashing](https://cs.nju.edu.cn/lwj/paper/AAAI18_ADSH.pdf)  
-code1 [ADSH matlab + pytorch](https://github.com/jiangqy/ADSH-AAAI2018)  
-code2 [ADSH_pytorch](https://github.com/TreezzZ/ADSH_PyTorch)
-
-DAGH(ICCV2019, not implement here)  
-paper [Deep Supervised Hashing with Anchor Graph](https://openaccess.thecvf.com/content_ICCV_2019/papers/Chen_Deep_Supervised_Hashing_With_Anchor_Graph_ICCV_2019_paper.pdf)  
-code [DAGH-Matlab](http://www.scholat.com/personalPaperList.html?Entry=laizhihui&selectType=allPaper)
-
-DAPH(ACMMM2017, not completely implement here)  
-paper [Deep Asymmetric Pairwise Hashing](http://cfm.uestc.edu.cn/~fshen/DAPH.pdf)
-
 LCDSH(IJCAI2017)  
 paper [Locality-Constrained Deep Supervised Hashing for Image Retrieval](https://www.ijcai.org/Proceedings/2017/0499.pdf)
 
 DSHSD(IEEE ACCESS 2019)  
 paper [Deep Supervised Hashing Based on Stable Distribution](https://ieeexplore.ieee.org/document/8648432/)
-
-CSQ(CVPR2020)  
-paper [Central Similarity Quantization for Efficient Image and Video Retrieval](https://openaccess.thecvf.com/content_CVPR_2020/papers/Yuan_Central_Similarity_Quantization_for_Efficient_Image_and_Video_Retrieval_CVPR_2020_paper.pdf)  
-code [CSQ-pytorch](https://github.com/yuanli2333/Hadamard-Matrix-for-hashing)  
 
 Deep Unsupervised Image Hashing by Maximizing Bit Entropy(AAAI2021)  
 paper [Deep Unsupervised Image Hashing by Maximizing Bit Entropy](https://arxiv.org/pdf/2012.12334.pdf)  
