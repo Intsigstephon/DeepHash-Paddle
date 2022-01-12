@@ -310,4 +310,68 @@ class DSHSDLoss2(paddle.nn.Layer):
 
         return Lc + Ld * self.alpha
 
+class DCHLoss2(paddle.nn.Layer):
+    """
+    paddle reimplementation: Deep Cauchy Hashing for Hamming Space Retrieval
+    """
+    def __init__(self, gamma, _lambda):
+        """
+        def some important parameters
+        gamma: for cauchy distribution: gamma / (gamma + dist) 
+        _lambda:  balance of cauchy cross-entroy loss and cauchy quantization loss
+        """
+        super(DCHLoss2, self).__init__()
+        self.gamma = gamma      #parameter in cauchy distribution
+        self._lambda = _lambda
+
+    def d(self, hi, hj):
+        """
+        given hi, hj; calculate the inner product
+        d(hi, hj) = K / 2 * (1 - cos(hi, hj))
+        """
+        #get bit len
+        assert hi.shape[1] == hj.shape[1], "feature len of hi and hj is different, please check whether the featurs are right"
+        K = hi.shape[1]
+        inner_product = paddle.matmul(hi, hj, transpose_y=True)
+        
+        #split into tmp_a, tmp_b
+        len_i = hi.pow(2).sum(axis=1, keepdim=True).pow(0.5)
+        len_j = hj.pow(2).sum(axis=1, keepdim=True).pow(0.5)
+        norm = paddle.matmul(len_i, len_j, transpose_y=True)
+        cos = inner_product / norm.clip(min=0.0001)
+        
+        # formula 6
+        return (1 - cos.clip(max=0.99)) * K / 2
+
+    def forward(self, u, y):
+        """
+        for a batch:
+        u is the features: batch_size * K
+        y is the labels:   one-hot label of labels: batch_size * n_class
+        """        
+        #1. calc w
+        s = paddle.matmul(y, y, transpose_y=True).astype("float32")  #1: means negative; 0: means positive
+        if (1 - s).sum() != 0 and s.sum() != 0:
+            # formula 2
+            positive_w = s * s.numel() / s.sum()              #negative_num * negative_w = constant(n * n)
+            negative_w = (1 - s) * s.numel() / (1 - s).sum()  #positive_num * positive_w = constant(n * n)
+            w = positive_w + negative_w    #generatet the whole w
+        else:
+            # maybe |S1|==0 or |S2|==0
+            w = 1
+        
+        #2. get d(hi,hj)
+        d_hi_hj = self.d(u, u)  #given two featurs, calc the hamming distance
+
+        # formula 8
+        cauchy_loss = w * (s * paddle.log(d_hi_hj / self.gamma) + paddle.log(1 + self.gamma / d_hi_hj))
+
+        # formula 9
+        all_one = paddle.ones_like(u, dtype="float32")
+        quantization_loss = paddle.log(1 + self.d(u.abs(), all_one) / self.gamma)
+
+        # formula 7
+        loss = cauchy_loss.mean() + self._lambda * quantization_loss.mean()
+
+        return loss
 
