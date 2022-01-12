@@ -145,7 +145,6 @@ def AlexNet(hash_bit, pretrained_path):
     return model
 
 if __name__=="__main__":
-
     net = AlexNet(48, "./pretrain/AlexNet_pretrained")
 
     #input 

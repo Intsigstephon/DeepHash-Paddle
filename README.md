@@ -123,7 +123,6 @@ paper [Deep Unsupervised Image Hashing by Maximizing Bit Entropy](https://arxiv.
 code [Deep-Unsupervised-Image-Hashing](https://github.com/liyunqianggyn/Deep-Unsupervised-Image-Hashing)
 
 # Mean Average Precision,48 bits[AlexNet].
-
 <table>
     <tr>
         <td>Algorithms</td><td>dataset</td><td>this impl.</td><td>paper</td>
