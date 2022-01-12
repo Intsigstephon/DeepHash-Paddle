@@ -1,0 +1,8 @@
+1. 个数
+train:    13000
+test:      5000
+database:  128503
+
+2. train和database都是取得image目录下的图片；test取的是val_image下的图片
+
+

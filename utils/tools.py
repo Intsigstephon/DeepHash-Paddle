@@ -6,15 +6,6 @@ from paddle.vision.datasets import Cifar10
 from paddle.vision import transforms
 
 def config_dataset(config):
-    """
-    the configure of dataset:
-    1. n_classes
-    2. topK
-    3. datapath
-    4. dataset: Actually, it is the name
-    support many dataset: 
-    cifar, nuswide_21, nuswide_21_m, nuswide_81_m, coco, imagenet, mirflicker, voc2012 
-    """
     if "cifar" in config["dataset"]:
         config["topK"] = -1
         config["n_class"] = 10
@@ -65,7 +56,6 @@ def config_dataset(config):
 
 class ImageList(object):
     def __init__(self, data_path, image_list, transform):
-        #support multi label
         self.imgs = [(data_path + val.split()[0], np.array([int(la) for la in val.split()[1:]])) for val in image_list]
         self.transform = transform
 
@@ -77,8 +67,7 @@ class ImageList(object):
 
     def __len__(self):
         return len(self.imgs)
-
-      
+   
 def image_transform(resize_size, crop_size, data_set):
     if data_set == "train_set":
         step = [transforms.RandomHorizontalFlip(), transforms.RandomCrop(crop_size)]
@@ -99,10 +88,8 @@ class MyCIFAR10(Cifar10):
         img = img.transpose([1, 2, 0]).astype("uint8") 
 
         img = Image.fromarray(img)
-        img = self.transform(img)  #3 * 224 * 224;  double, (-1, 1)
-
-        target = np.eye(10, dtype=np.int8)[np.array(target)]   #to one-hot
-        return img, target, index
+        img = self.transform(img)
+        target = np.eye(10, dtype=np.int8)[np.array(target)] 
 
 def get_index(dataset, label):
     rslt = []
@@ -112,11 +99,6 @@ def get_index(dataset, label):
     return np.array(rslt)
   
 def cifar_dataset(config):
-    """
-    total: 60000:  10 * 6000
-    train: 50000 = 10 * 5000
-    test:  10000 = 10 * 1000
-    """
     batch_size = config["batch_size"]
     
     train_size = 500
@@ -208,11 +190,6 @@ def cifar_dataset(config):
            train_index.shape[0], test_index.shape[0], database_index.shape[0]
 
 def get_data(config):
-    """
-    support cifar-0/1/2 and other dataset
-    return train_loader, test_loader, database_loader
-    len of train/test/database
-    """
     if "cifar" in config["dataset"]:
         return cifar_dataset(config)
 
@@ -236,8 +213,6 @@ def get_data(config):
 def compute_result(dataloader, net, device):
     all_feas, all_image_id = None, None
     net.eval()
-
-    #will not release
     for img, label, index in tqdm(dataloader):
         batch_feas = net(img)
         batch_feas = paddle.sign(batch_feas).astype("float32")
@@ -304,9 +279,7 @@ def CalcTopMap(rB, qB, retrievalL, queryL, topk):
     return topkmap
 
 if __name__=="__main__":
-
     import paddle.optimizer as optim
-
     config = {
         "alpha": 0.1,
         # "optimizer":{"type":  optim.SGD, "optim_params": {"lr": 0.05, "weight_decay": 10 ** -5}},
