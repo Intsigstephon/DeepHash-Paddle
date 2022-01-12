@@ -18,7 +18,7 @@ pyhon DSDH.py
 If you have any problems, feel free to contact me by email(1142732931@qq.com) or raise an issue.  
 
 # Precision Recall Curve
-<img src="https://github.com/swuxyj/DeepHash-Paddle/blob/master/utils/pr.png"  alt="Precision Recall Curve"/><br/>  
+<img src="https://github.com/Intsigstephon/DeepHash-Paddle/blob/master/utils/pr.png"  alt="Precision Recall Curve"/><br/>  
 I add some code in DSH.py:
 ```
 if "cifar10-1" == config["dataset"] and epoch > 29:
@@ -126,7 +126,6 @@ code [Deep-Unsupervised-Image-Hashing](https://github.com/liyunqianggyn/Deep-Uns
 
 # Mean Average Precision,48 bits[AlexNet].
 
-
 <table>
     <tr>
         <td>Algorithms</td><td>dataset</td><td>this impl.</td><td>paper</td>
@@ -146,129 +145,7 @@ code [Deep-Unsupervised-Image-Hashing](https://github.com/liyunqianggyn/Deep-Uns
     <tr>
         <td ></td><td >mirflickr</td> <td >0.735</td> <td >-</td>
     </tr>
-    <tr>
-        <td >DPSH</td><td >cifar10</td> <td >0.775</td> <td >0.757</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.844</td> <td >0.851(0.812*)</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.502</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.711</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >voc2012</td> <td >0.608</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >mirflickr</td> <td >0.781</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >HashNet</td><td >cifar10</td> <td >0.782</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus wide81 m</td> <td >0.764</td> <td >0.7114</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.830</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.644</td> <td >0.6633</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.724</td> <td >0.7301</td>
-    </tr>
-    <tr>
-        <td >DHN</td><td >cifar10</td> <td >0.781</td> <td >0.621</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.841</td> <td >0.758</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.486</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.712</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >mirflickr</td> <td >0.775</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >DSDH</td><td >cifar10-1</td> <td >0.790</td> <td >0.820</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.833</td> <td >0.829</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.300</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.681</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >mirflickr</td> <td >0.765</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >DTSH</td><td >cifar 10</td> <td >0.800</td> <td >0.774</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.829</td> <td >0.824</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.760</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.631</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >mirflickr</td> <td >0.753</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >DFH</td><td >cifar10-1</td> <td >0.801</td> <td >0.844</td>
-    </tr>
-    <tr>
-        <td ></td><td >nus_wide_21</td> <td >0.837</td> <td >0.842</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.717</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.519</td> <td >0.747</td>
-    </tr>
-    <tr>
-        <td ></td><td >mirflickr</td> <td >0.766</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >GreedyHash</td><td >cifar10-1</td> <td >0.817</td> <td >0.822</td>
-    </tr>
-    <tr>
-        <td ></td><td >cifar10-2</td> <td >0.932</td> <td >0.944</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.678</td> <td >0.688</td>
-    </tr>
-    <tr>
-        <td ></td><td >ms coco</td> <td >0.728</td> <td >-</td>
-    </tr>
-    <tr>
-        <td ></td><td >nuswide_21</td> <td >0.793</td> <td >-</td>
-    </tr>
-    <tr>
-        <td >ADSH</td><td >cifar10-1</td> <td >0.921</td> <td >0.9390</td>
-    </tr>
-    <tr>
-        <td ></td><td >nuswide_21</td> <td >0.622</td> <td >0.9055</td>
-    </tr>
-    <tr>
-        <td >CSQ(ResNet50,64bit)</td><td >coco</td> <td >0.883</td> <td >0.861</td>
-    </tr>
-    <tr>
-        <td ></td><td >imagenet</td> <td >0.881</td> <td >0.873</td>
-    </tr>
-    <tr>
-        <td ></td><td >nuswide_21_m</td> <td >0.844</td> <td >0.839</td>
-    </tr>
 </table>
+
 Due to time constraints, I can't test many hyper-parameters  
 
