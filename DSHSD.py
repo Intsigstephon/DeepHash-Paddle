@@ -21,10 +21,6 @@ import numpy as np
 4. nus-wide-21:  train_set 10500;  test 2100; database 193734     0.940
 """
 
-"""
-save: cifar-1:  0.798/0.795;  cifar-2:  
-"""
-
 def get_config():
     config = {
         "alpha": 0.05,
@@ -43,7 +39,7 @@ def get_config():
         "test_map": 15,
         "device": paddle.set_device("gpu"),
         "bit_list": [48],
-        "save_path": "save/DSHSD_0813_cifar"
+        "save_path": "save/DSHSD"
     }
     config = config_dataset(config)
     return config
@@ -60,8 +56,7 @@ class DSHSDLoss(paddle.nn.Layer):
         super(DSHSDLoss, self).__init__()
         self.m = 2 * bit     
         
-        #how to initilize
-        self.fc = paddle.nn.Linear(bit, n_class, bias_attr=False)  #use fc to connect bit and n_class
+        self.fc = paddle.nn.Linear(bit, n_class, bias_attr=False)
         self.alpha = alpha
         self.multi_label = multi_label
         self.n_class = n_class
@@ -72,8 +67,6 @@ class DSHSDLoss(paddle.nn.Layer):
         feature: features
         label: labels
         """
-        # import pdb
-        # pdb.set_trace()
         feature = feature.tanh().astype("float32")
 
         dist = paddle.sum(
@@ -99,17 +92,11 @@ class DSHSDLoss(paddle.nn.Layer):
         return Lc + Ld * self.alpha
 
 def train_val(config, bit):
-
     device = config["device"]
-
-    #diff in dataloader; difference appear here
     train_loader, test_loader, dataset_loader, num_train, num_test, num_dataset = get_data(config)
 
     config["num_train"] = num_train
     net = config["net"](bit, "./pretrain/AlexNet_pretrained")
-
-    # import pdb
-    # pdb.set_trace()
 
     optimizer = config["optimizer"]["type"](parameters = net.parameters(), **(config["optimizer"]["optim_params"]))
     criterion = DSHSDLoss(config["n_class"], bit, config["alpha"])
@@ -124,10 +111,8 @@ def train_val(config, bit):
         train_loss = 0
         for image, label, ind in train_loader:
 
-            #label = label.astype("int64") 
-
             optimizer.clear_grad()
-            u = net(image)   #u is the feature; label
+            u = net(image) 
 
             loss = criterion(u, label)
             train_loss += loss.numpy()
@@ -136,22 +121,15 @@ def train_val(config, bit):
             optimizer.step()
 
         train_loss = train_loss / len(train_loader)
-
         print("\b\b\b\b\b\b\b loss:%.3f" % (train_loss))
-
         if (epoch + 1) % config["test_map"] == 0:
-
             # print("calculating test binary code......")
             tst_binary, tst_label = compute_result(test_loader, net, device=device)
-
             # print("calculating dataset binary code.......")\
             trn_binary, trn_label = compute_result(dataset_loader, net, device=device)
-
             # print("calculating map.......")
             mAP = CalcTopMap(trn_binary.numpy(), tst_binary.numpy(), trn_label.numpy(), tst_label.numpy(),
                              config["topK"])
-            
-            #compare with paddle api(map)
 
             if mAP > Best_mAP:
                 Best_mAP = mAP
@@ -164,18 +142,15 @@ def train_val(config, bit):
                     np.save(os.path.join(config["save_path"], config["dataset"] + str(mAP) + "-" + "trn_binary.npy"),
                             trn_binary.numpy())
                     
-                    #save model
                     paddle.save(net.state_dict(),
                                os.path.join(config["save_path"], config["dataset"] + "-" + str(mAP) + "-model.pdparams"))
 
             print("%s epoch:%d, bit:%d, dataset:%s, MAP:%.3f, Best MAP: %.3f" % (
                 config["info"], epoch + 1, bit, config["dataset"], mAP, Best_mAP))
-
             print(config)
 
 if __name__ == "__main__":
     config = get_config()
     print(config)
-
     for bit in config["bit_list"]:
         train_val(config, bit)
