@@ -68,16 +68,16 @@ HashNet(ICCV2017)
 paper [HashNet: Deep Learning to Hash by Continuation](http://openaccess.thecvf.com/content_ICCV_2017/papers/Cao_HashNet_Deep_Learning_ICCV_2017_paper.pdf)  
 code [HashNet caffe and pytorch](https://github.com/thuml/HashNet)
 
-GreedyHash(NIPS2018)  
-paper [Greedy Hash: Towards Fast Optimization for Accurate Hash Coding in CNN](https://papers.nips.cc/paper/7360-greedy-hash-towards-fast-optimization-for-accurate-hash-coding-in-cnn.pdf)  
-code [GreedyHash](https://github.com/ssppp/GreedyHash) 
-
 DSDH(NIPS2017)  
 paper [Deep Supervised Discrete Hashing](https://papers.nips.cc/paper/6842-deep-supervised-discrete-hashing.pdf)  
 code [DSDH_PyTorch](https://github.com/TreezzZ/DSDH_PyTorch)
 
 LCDSH(IJCAI2017)  
 paper [Locality-Constrained Deep Supervised Hashing for Image Retrieval](https://www.ijcai.org/Proceedings/2017/0499.pdf)
+
+GreedyHash(NIPS2018)  
+paper [Greedy Hash: Towards Fast Optimization for Accurate Hash Coding in CNN](https://papers.nips.cc/paper/7360-greedy-hash-towards-fast-optimization-for-accurate-hash-coding-in-cnn.pdf)  
+code [GreedyHash](https://github.com/ssppp/GreedyHash) 
 
 DSHSD(IEEE ACCESS 2019)  
 paper [Deep Supervised Hashing Based on Stable Distribution](https://ieeexplore.ieee.org/document/8648432/)
