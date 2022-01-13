@@ -202,7 +202,6 @@ def get_data(config):
         dsets[data_set] = ImageList(config["data_path"],
                                     open(data_config[data_set]["list_path"]).readlines(),
                                     transform=image_transform(config["resize_size"], config["crop_size"], data_set))
-        print(data_set, len(dsets[data_set]))
         dset_loaders[data_set] = paddle.io.DataLoader(dsets[data_set],
                                                       batch_size=data_config[data_set]["batch_size"],
                                                       shuffle=True, num_workers=4)

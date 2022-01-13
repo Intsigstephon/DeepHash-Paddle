@@ -7,80 +7,99 @@ import paddle.optimizer as optim
 import time
 import numpy as np
 
+# DSHSD(IEEE ACCESS 2019)
+# paper [Deep Supervised Hashing Based on Stable Distribution](https://ieeexplore.ieee.org/document/8648432/)
+# [DSHSD] epoch:70, bit:48, dataset:cifar10-1, MAP:0.809, Best MAP: 0.809
+# [DSHSD] epoch:250, bit:48, dataset:nuswide_21, MAP:0.809, Best MAP: 0.815
+# [DSHSD] epoch:135, bit:48, dataset:imagenet, MAP:0.647, Best MAP: 0.647
+
+"""
+实验结果：
+1. cifar:   5000、1000、54000      0.782(90epoch)
+2. cifar-1: 5000、1000、59000      
+3. cifar-2: 50000、10000、50000    
+"""
+
 def get_config():
     config = {
-        "lambda": 3,
-        # "optimizer": {"type": optim.Adam, "optim_params": {"lr": 1e-5, "betas": (0.9, 0.999)}},
-        "optimizer": {"type": optim.RMSProp, "optim_params": {"learning_rate": 1e-5, "weight_decay": 10 ** -5}},
-
-        "info": "[LCDSH]",
+        "alpha": 0.05,
+        "optimizer": {"type": optim.Adam, "optim_params": {"learning_rate": 1e-5, "beta1": 0.9, "beta2":0.999}},
+        "info": "[DSHSD]",
         "resize_size": 256,
         "crop_size": 224,
-        "batch_size": 128,
+        "batch_size": 64,
         "net": AlexNet,
         # "net":ResNet,
 
-        "dataset": "cifar10-2",
+        "dataset": "cifar10-1",
+        # "dataset": "imagenet",
         # "dataset": "nuswide_21",
-
-        "epoch": 150,
+        "epoch": 100,
         "test_map": 10,
-
         "device": paddle.set_device("gpu"),
         "bit_list": [48],
-        "save_path": "save/LCDSH",
+        "save_path": "save/DSHSD-1"
     }
-    
     config = config_dataset(config)
     return config
 
-class LCDSHLoss(paddle.nn.Layer):
+class DSHSDLoss(paddle.nn.Layer):
     """
-    # paper [Locality-Constrained Deep Supervised Hashing for Image Retrieval](https://www.ijcai.org/Proceedings/2017/0499.pdf)
-    # [LCDSH] epoch:145, bit:48, dataset:cifar10-1,  MAP:0.798, Best MAP: 0.798
-    # [LCDSH] epoch:183, bit:48, dataset:nuswide_21, MAP:0.833, Best MAP: 0.834
+    # DSHSD(IEEE ACCESS 2019)
+    # paper [Deep Supervised Hashing Based on Stable Distribution](https://ieeexplore.ieee.org/document/8648432/)
+    # [DSHSD] epoch:70,  bit:48,  dataset:cifar10-1, MAP:0.809, Best MAP: 0.809
+    # [DSHSD] epoch:250, bit:48, dataset:nuswide_21, MAP:0.809, Best MAP: 0.815
+    # [DSHSD] epoch:135, bit:48, dataset:imagenet, MAP:0.647, Best MAP: 0.647
     """
-    def __init__(self, _lambda):
-        super(LCDSHLoss, self).__init__()
-        self._lambda = _lambda
+    def __init__(self, n_class, bit, alpha, multi_label=False):
+        super(DSHSDLoss, self).__init__()
+        self.m = 2 * bit     
+        
+        self.fc = paddle.nn.Linear(bit, n_class, bias_attr=False)
+        self.alpha = alpha
+        self.multi_label = multi_label
+        self.n_class = n_class
 
     def forward(self, feature, label):
         """
         for a batch result:
         feature: features
         label: labels
-        index: image index in all the train dataset
         """
+        feature = feature.tanh().astype("float32")
         label = label.astype("float32")
 
-        s = 2 * (paddle.matmul(label, label, transpose_y=True) > 0).astype("float32") - 1
-        inner_product = paddle.matmul(feature, feature, transpose_y=True) * 0.5
+        dist = paddle.sum(
+                    paddle.square((paddle.unsqueeze(feature, 1) - paddle.unsqueeze(feature, 0))), 
+                    axis=2)
+        
+        #label to onehot
+        # label = paddle.flatten(label)
+        # label = paddle.nn.functional.one_hot(label,  self.n_class).astype("float32")
 
-        inner_product = inner_product.clip(min=-50, max=50)
-        L1 = paddle.log(1 + paddle.exp(-s * inner_product)).mean()
+        s = (paddle.matmul(label, label, transpose_y=True) == 0).astype("float32")
+        Ld = (1 - s) / 2 * dist + s / 2 * (self.m - dist).clip(min=0)
+        Ld = Ld.mean()
+        
+        logits = self.fc(feature)
+        if self.multi_label:
+            # formula 8, multiple labels classification loss
+            Lc = (logits - label * logits + ((1 + (-logits).exp()).log())).sum(axis=1).mean()
+        else:
+            # formula 7, single labels classification loss
+            Lc = (-paddle.nn.functional.softmax(logits).log() * label).sum(axis=1).mean()
 
-        #do sgn
-        b = feature.sign()
-        inner_product_ = paddle.matmul(b, b, transpose_y=True) * 0.5
-        sigmoid = paddle.nn.Sigmoid()
-        L2 = (sigmoid(inner_product) - sigmoid(inner_product_)).pow(2).mean()
-
-        return L1 + self._lambda * L2
+        return Lc + Ld * self.alpha
 
 def train_val(config, bit):
     device = config["device"]
-
-    #diff in dataloader; difference appear here
-    train_loader, test_loader, dataset_loader, num_train, num_test, num_dataset = get_data(config)  
+    train_loader, test_loader, dataset_loader, num_train, num_test, num_dataset = get_data(config)
 
     config["num_train"] = num_train
     net = config["net"](bit, "./pretrain/AlexNet_pretrained")
 
-    # import pdb
-    # pdb.set_trace()
-    multi_label = "nuswide" in config["dataset"]
-    optimizer = config["optimizer"]["type"](parameters = net.parameters(), rho=0.99, epsilon=1e-08, **(config["optimizer"]["optim_params"]))
-    criterion = LCDSHLoss(config["lambda"])
+    optimizer = config["optimizer"]["type"](parameters = net.parameters(), **(config["optimizer"]["optim_params"]))
+    criterion = DSHSDLoss(config["n_class"], bit, config["alpha"])
 
     Best_mAP = 0
     for epoch in range(config["epoch"]):
@@ -92,7 +111,7 @@ def train_val(config, bit):
         train_loss = 0
         for image, label, ind in train_loader:
             optimizer.clear_grad()
-            u = net(image)   #u is the feature; label
+            u = net(image) 
 
             loss = criterion(u, label)
             train_loss += loss.numpy()
@@ -101,22 +120,15 @@ def train_val(config, bit):
             optimizer.step()
 
         train_loss = train_loss / len(train_loader)
-
         print("\b\b\b\b\b\b\b loss:%.3f" % (train_loss))
-
         if (epoch + 1) % config["test_map"] == 0:
-
             # print("calculating test binary code......")
             tst_binary, tst_label = compute_result(test_loader, net, device=device)
-
             # print("calculating dataset binary code.......")\
             trn_binary, trn_label = compute_result(dataset_loader, net, device=device)
-
             # print("calculating map.......")
             mAP = CalcTopMap(trn_binary.numpy(), tst_binary.numpy(), trn_label.numpy(), tst_label.numpy(),
-                             config["topK"])  #elapsed too log:      4mins/10000 query
-            
-            #compare with paddle api(map)
+                             config["topK"])
 
             if mAP > Best_mAP:
                 Best_mAP = mAP
@@ -129,18 +141,15 @@ def train_val(config, bit):
                     np.save(os.path.join(config["save_path"], config["dataset"] + str(mAP) + "-" + "trn_binary.npy"),
                             trn_binary.numpy())
                     
-                    #save model
                     paddle.save(net.state_dict(),
                                os.path.join(config["save_path"], config["dataset"] + "-" + str(mAP) + "-model.pdparams"))
 
             print("%s epoch:%d, bit:%d, dataset:%s, MAP:%.3f, Best MAP: %.3f" % (
                 config["info"], epoch + 1, bit, config["dataset"], mAP, Best_mAP))
-
             print(config)
 
 if __name__ == "__main__":
     config = get_config()
     print(config)
-
     for bit in config["bit_list"]:
         train_val(config, bit)
