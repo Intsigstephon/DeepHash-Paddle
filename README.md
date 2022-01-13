@@ -9,10 +9,7 @@ python==3.7.0  paddle==2.2.1
 
 You can easily train and test any algorithm just by
 ```
-pyhon DSH.py  
-pyhon DPSH.py  
-pyhon DHN.py    
-pyhon DSDH.py    
+pyhon DSHSD.py   
 ``` 
 
 # Precision Recall Curve
@@ -108,6 +105,5 @@ code [Deep-Unsupervised-Image-Hashing](https://github.com/liyunqianggyn/Deep-Uns
     </tr>
 </table>
 
-Due to time constraints, I can't test many hyper-parameters.
 If you have any problems, feel free to contact me by email(451685052@qq.com) or raise an issue. 
 
