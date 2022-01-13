@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
+
 import paddle
 from paddle.vision.datasets import Cifar10
 from paddle.vision import transforms
@@ -89,7 +90,8 @@ class MyCIFAR10(Cifar10):
 
         img = Image.fromarray(img)
         img = self.transform(img)
-        target = np.eye(10, dtype=np.int8)[np.array(target)] 
+        target = np.eye(10)[np.array(target)] 
+        return img, target.astype("float32"), index
 
 def get_index(dataset, label):
     rslt = []
@@ -135,7 +137,6 @@ def cifar_dataset(config):
         index = get_index(X, label)  
         N = index.shape[0]
         perm = np.random.permutation(N)  
-
         index = index[perm]
 
         if first:
@@ -173,17 +174,17 @@ def cifar_dataset(config):
     train_loader = paddle.io.DataLoader(dataset=train_dataset,
                                                batch_size=batch_size,
                                                shuffle=True,
-                                               num_workers=4)
+                                               num_workers=1)
 
     test_loader = paddle.io.DataLoader(dataset=test_dataset,
                                               batch_size=batch_size,
                                               shuffle=False,
-                                              num_workers=4)
+                                              num_workers=1)
 
     database_loader = paddle.io.DataLoader(dataset=database_dataset,
                                                   batch_size=batch_size,
                                                   shuffle=False,
-                                                  num_workers=4)
+                                                  num_workers=1)
 
 
     return train_loader, test_loader, database_loader, \
